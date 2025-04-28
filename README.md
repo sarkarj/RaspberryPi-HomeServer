@@ -229,10 +229,11 @@ Ensure cron is running
 sudo systemctl enable cron
 sudo systemctl start cron  
 ```
-✅ No container overhead
-✅ Easier to debug
-✅ Survives reboots and updates
-✅ Simple to maintain and edit
+
+- ✅ No container overhead
+- ✅ Easier to debug
+- ✅ Survives reboots and updates
+- ✅ Simple to maintain and edit
 
 Every 5 minutes, cron will:
 	• Run ~/duckdns/duck.sh
@@ -266,7 +267,8 @@ services:
 ```bash
 docker-compose up -d
 ```
-Generate Let's Encrypt Certificates with duckdns **tokens** 
+
+Use NGINX Proxy Manager UI to configure SSL certificates (Let’s Encrypt). Generate Let's Encrypt Certificates with duckdns **tokens** 
 
 **🔒 Security Recap: Router Port Forwarding 443/TCP to Raspberry Pi internal IP**: 
 
@@ -331,6 +333,9 @@ sudo systemctl enable wg-quick@wg0
 Forward 51820/UDP to your Raspberry Pi internal IP.
 
 **🔥 Firewall (UFW) Setup**
+```bash
+sudo apt install ufw
+```
 ```bash
 sudo nano secure-ufw-reset.sh
 ```
@@ -423,6 +428,7 @@ Then verify:
 sudo ufw status numbered
 ```
 
+**🎯
 
 **📜 FINAL 🚀:**
 
