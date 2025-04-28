@@ -197,11 +197,12 @@ How to Import:
 
 Secure Setup **SSL & NGINX Proxy** 
 
-   1. Choose a Dynamic DNS provider   domain (Example: duckdns.org) and generate token
-   2. Running DuckDNS outside of Docker
-      
+Choose a **Dynamic DNS**provider   domain (Example: duckdns.org) and generate **token**. Running **DuckDNS outside of Docker**
+
 ```bash
-cat duck.sh
+sudo nano duck.sh
+```
+```bash
 #!/bin/bash
 echo url="https://www.duckdns.org/update?domains=<subdomin1,subdomin2&token=<token>&ip=<router-public-IP>" | curl -k -o ~/duckdns/duck.log -K -
 ```
@@ -218,15 +219,14 @@ Add to crontab
 ```bash
 crontab -e
 ```
-Add this line at the bottom: Save and exit (CTRL+O, Enter, then CTRL+X if using nano).
+Add this line at the bottom: Save and exit (CTRL+O, Enter, then CTRL+X).
 ```bash
 */5 * * * * ~/duckdns/duck.sh >/dev/null 2>&1
 ```
 Ensure cron is running
 ```bash
 sudo systemctl enable cron
-sudo systemctl start cron  Synchronizing state of cron.service with SysV service script with /lib/systemd/systemd-sysv-install.
-Executing: /lib/systemd/systemd-sysv-install enable cron
+sudo systemctl start cron  
 ```
 ✅ No container overhead
 ✅ Easier to debug
@@ -234,14 +234,38 @@ Executing: /lib/systemd/systemd-sysv-install enable cron
 ✅ Simple to maintain and edit
 
 Every 5 minutes, cron will:
-	•	Run ~/duckdns/duck.sh
-	•	Send a request to DuckDNS to update your public IP
-	•	Log the result (OK/KO) in ~/duckdns/duck.log
+	• Run ~/duckdns/duck.sh
+ 	• Send a request to DuckDNS to update your public IP
+  	• Log the result (OK/KO) in ~/duckdns/duck.log
 
-You can check the log anytime:
+Check the log anytime:
 ```bash
 cat ~/duckdns/duck.log
 ```
+
+Setup **NGINX Reverse Proxy** with SSL
+
+docker-compose.yml
+```bash
+services:
+  nginx-proxy-manager:
+    image: jc21/nginx-proxy-manager:latest
+    container_name: nginx_proxy_manager
+    restart: unless-stopped
+    ports:
+      - "80:80"     # HTTP for initial Let's Encrypt validation
+      - "443:443"   # HTTPS secure access
+      - "81:81"     # NPM admin dashboard
+    environment:
+      TZ: ${TZ}
+    volumes:
+      - ./npm/data:/data
+      - ./npm/letsencrypt:/etc/letsencrypt
+```
+```bash
+docker-compose up -d
+```
+<img src="npm.png" width="700">
 
 ## 🛡️ WireGuard VPN Setup (via PiVPN)
 
