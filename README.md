@@ -265,7 +265,18 @@ services:
 ```bash
 docker-compose up -d
 ```
-**Router Port Forwarding**: Forward 443/TCP to your Raspberry Pi internal IP to generate Let's Encrypt Certificates with **token** 
+Generate Let's Encrypt Certificates with duckdns **tokens** 
+
+**🔒 Security Recap: Router Port Forwarding 443/TCP to Raspberry Pi internal IP**: 
+
+| Component 		| Tool 				| Notes| 
+|-----------------------|-------------------------------|------|
+| Domain/DDNS 		| DuckDNS 			| Used DuckDNS for setup|
+| SSL 			| Let’s Encrypt (via NPM) 	| Auto-renewals, free certs|
+| Reverse Proxy		| NGINX Proxy Manager		| Web UI, Dockerized, secure|
+| Dynamic IP support 	| DDNS				| Updates IP to DNS A record|
+| HTTPS on Port 443	| Router + UFW + NGINX Proxy	| Secured traffic only|
+
 <img src="npm.png" width="700">
 <img src="npn-cert.png" width="700">
 
