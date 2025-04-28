@@ -19,3 +19,23 @@ Raspberry Pi Home Server Deployment, Preparation, Install and Secure Docker, Wir
 | Prometheus           | Docker | 9090                                             | None                    | TCP     | Metrics|
 | Watchtower           | Docker | 8080                                             | None                    | TCP     | Container auto-update|
 | Home Assistant       | Docker | 8123                                             | None                    | TCP     | Smart home hub|
+| RPi Connect          | Host   | 44353, 5367, 6780                                | None                    | TCP     | LAN/VPN only |
+
+## 🖥 Raspberry Pi Preparation
+
+```bash
+ssh pi@<Raspberry Pi IP>
+...
+cat /etc/os-release
+
+PRETTY_NAME="Raspbian GNU/Linux 12 (bookworm)"
+NAME="Raspbian GNU/Linux"
+VERSION_ID="12"
+VERSION="12 (bookworm)"
+VERSION_CODENAME=bookworm
+ID=raspbian
+ID_LIKE=debian
+HOME_URL="http://www.raspbian.org/"
+SUPPORT_URL="http://www.raspbian.org/RaspbianForums"
+BUG_REPORT_URL="http://www.raspbian.org/RaspbianBugs"
+```
