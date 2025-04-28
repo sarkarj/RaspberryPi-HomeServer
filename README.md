@@ -110,6 +110,46 @@ docker run -d \
 
 docker exec -it pihole pihole -g
 ```
+Deploy Other Dockerized Services : Organize services under folders, e.g., /home/pi/DockerApps. (ContactClient, Dashboard, homeassistant, NPM,  URLRepo)
+
+**Prometheus & Grafana Dashboard**
+docker-compose.yml
+```yaml
+services:
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
+    network_mode: host
+    ports:
+      - "9090:9090"
+    restart: always
+
+  node_exporter:
+    image: prom/node-exporter
+    container_name: node_exporter
+    ports:
+      - "9100:9100"
+    network_mode: host
+    restart: always
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    network_mode: host
+    volumes:
+      - grafana_data:/var/lib/grafana
+    restart: always
+
+volumes:
+  prometheus_data:
+  grafana_data:
+```
+
 
 ## 🛡️ WireGuard VPN Setup (via PiVPN)
 
@@ -133,5 +173,7 @@ sudo systemctl start wg-quick@wg0
 sudo systemctl enable wg-quick@wg0
 ```
 **Router Port Forwarding**: Forward 51820/UDP to your Raspberry Pi internal IP.
+
+
 
 
