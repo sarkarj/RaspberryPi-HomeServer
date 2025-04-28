@@ -116,6 +116,8 @@ After container is running (force rebuild gravity list)
 ```bash
 docker exec -it pihole pihole -g
 ```
+<img src="Pi-hole.png" width="500"> 
+
 Deploy Other Dockerized Services : Organize services under folders, e.g., /home/pi/DockerApps. (ContactClient, Dashboard, homeassistant, NPM,  URLRepo)
 
 **Prometheus & Grafana Dashboard** (Prometheus is the metrics collector, and Grafana will visualize the data)
@@ -177,21 +179,21 @@ docker-compose up -d
 ```
 Add data source and import dashboards
 
- 1. Open **Grafana** at: http://<RaspberryPi IP>:3000
-	2.	Go to “**Settings**” > “**Data Sources**”
-	3.	Click “**Add data source**”, choose **Prometheus**
-	4.	URL: http://localhost:9090 and save.
+<img src="Prometheus.png" width="700">
+
+   1. Open **Grafana** at: http://<RaspberryPi IP>:3000
+   2. Go to “**Settings**” > “**Data Sources**”
+   3. Click “**Add data source**”, choose **Prometheus**
+   4. URL: http://localhost:9090 and save.
+
+<img src="Grafana.png" width="700">
 
 Grafana has many prebuilt dashboards. Example:Node Exporter 
 How to Import:
-	1.	Go to ”**+**” > **Import**
-	2.	Paste the **Dashboard ID**
-	3.	Click **Load**, select **Prometheus** as the data source
-	4.	Done ✅
-
-<img src="Grafana.png" width="500">
-
-
+   1.  Go to ”**+**” > **Import**
+   2.  Paste the **Dashboard ID**
+   3.  Click **Load**, select **Prometheus** as the data source
+   4.  Done ✅
 
 ## 🛡️ WireGuard VPN Setup (via PiVPN)
 
