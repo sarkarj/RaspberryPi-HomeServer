@@ -30,7 +30,6 @@ This project turns a Raspberry Pi into a secure, resilient home server for self-
 ssh pi@<Raspberry Pi IP>
 ...
 cat /etc/os-release
-
 PRETTY_NAME="Raspbian GNU/Linux 12 (bookworm)"
 NAME="Raspbian GNU/Linux"
 VERSION_ID="12"
@@ -68,7 +67,7 @@ sudo systemctl start docker
 
 ## 📦 Deploy Core Dockerized Services
 
-Portainer (Docker Management)
+**Portainer** Docker Management
 ```yaml
 # ~/DockerApps/portainer/docker-compose.yml
 version: '3'
@@ -87,6 +86,29 @@ services:
 
 volumes:
   portainer_data:
+```
+**Pi-hole** (LAN DNS Ad Blocker)
+
+```bash
+docker run -d \
+  --name pihole \
+  --restart=unless-stopped \
+  --network bridge \
+  -p 53:53/tcp -p 53:53/udp \
+  -p 67:67/udp \
+  -p 8081:80 \
+  -p 8443:443 \
+  -v etc-pihole:/etc/pihole \
+  -v etc-dnsmasq.d:/etc/dnsmasq.d \
+  --cap-add=NET_ADMIN \
+  --dns=127.0.0.1 --dns=1.1.1.1 \
+  -e TZ="America/New_York" \
+  -e WEBPASSWORD="your_secure_password" \
+  -e DNSMASQ_LISTENING=all \
+  -e PIHOLE_DNS_="1.1.1.1;1.0.0.1" \
+  pihole/pihole:latest
+
+docker exec -it pihole pihole -g
 ```
 
 ## 🛡️ WireGuard VPN Setup (via PiVPN)
