@@ -90,6 +90,7 @@ volumes:
 ```bash
 docker-compose up -d
 ```
+<img src="Portainer.png" width="700">
 
 **Pi-hole** (LAN DNS Ad Blocker)
 
