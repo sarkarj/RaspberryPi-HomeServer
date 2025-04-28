@@ -112,7 +112,8 @@ docker exec -it pihole pihole -g
 ```
 Deploy Other Dockerized Services : Organize services under folders, e.g., /home/pi/DockerApps. (ContactClient, Dashboard, homeassistant, NPM,  URLRepo)
 
-**Prometheus & Grafana Dashboard**
+**Prometheus & Grafana Dashboard** (Prometheus is the metrics collector, and Grafana will visualize the data)
+
 docker-compose.yml
 ```yaml
 services:
@@ -150,6 +151,24 @@ volumes:
   grafana_data:
 ```
 
+Create Prometheus config: prometheus/prometheus.yml 
+
+```bash
+/DockerApps/Dashboard/prometheus $ sudo nano prometheus.yml
+```
+```bash
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'node'
+    static_configs:
+      - targets: ['localhost:9100']
+```
+
+```bash
+docker-compose up -d
+```
 
 ## 🛡️ WireGuard VPN Setup (via PiVPN)
 
