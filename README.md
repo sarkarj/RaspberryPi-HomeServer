@@ -2,7 +2,7 @@
 Raspberry Pi Home Server Deployment, Preparation, Install and Secure Docker, WireGuard PiVPN Setup, Deploy Dockerized Services - Pi-hole DNS, Prometheus + Grafana Dashboard Monitoring RPI, Home Assistant, NGINX Reverse Proxy with SSL, Firewall Configuration (UFW), Router Port Forwarding
 
 ## 📡 System Architecture 
-<img src="ArchitectureDiagram1.png" width="500"> <img src="OverallArchitecture.png" width="250">
+<img src="ArchitectureDiagram.png" width="500"> <img src="OverallArchitecture.png" width="250">
 
 ## 📄 Services and Exposure
 | Service              | Docker?| Port(s) Exposed Internally                       | Port(s) Exposed Publicly| Protocol| Notes |
