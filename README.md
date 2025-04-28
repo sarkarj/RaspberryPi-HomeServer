@@ -265,7 +265,9 @@ services:
 ```bash
 docker-compose up -d
 ```
+**Router Port Forwarding**: Forward 443/TCP to your Raspberry Pi internal IP to generate Let's Encrypt Certificates with **token** 
 <img src="npm.png" width="700">
+<img src="npn-cert.png" width="700">
 
 ## 🛡️ WireGuard VPN Setup (via PiVPN)
 
