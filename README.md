@@ -87,6 +87,10 @@ services:
 volumes:
   portainer_data:
 ```
+```bash
+docker-compose up -d
+```
+
 **Pi-hole** (LAN DNS Ad Blocker)
 
 ```bash
@@ -107,7 +111,9 @@ docker run -d \
   -e DNSMASQ_LISTENING=all \
   -e PIHOLE_DNS_="1.1.1.1;1.0.0.1" \
   pihole/pihole:latest
-
+```
+After container is running (force rebuild gravity list)
+```bash
 docker exec -it pihole pihole -g
 ```
 Deploy Other Dockerized Services : Organize services under folders, e.g., /home/pi/DockerApps. (ContactClient, Dashboard, homeassistant, NPM,  URLRepo)
@@ -169,6 +175,23 @@ scrape_configs:
 ```bash
 docker-compose up -d
 ```
+Add data source and import dashboards
+
+ 1. Open **Grafana** at: http://<RaspberryPi IP>:3000
+	2.	Go to “**Settings**” > “**Data Sources**”
+	3.	Click “**Add data source**”, choose **Prometheus**
+	4.	URL: http://localhost:9090 and save.
+
+Grafana has many prebuilt dashboards. Example:Node Exporter 
+How to Import:
+	1.	Go to ”**+**” > **Import**
+	2.	Paste the **Dashboard ID**
+	3.	Click **Load**, select **Prometheus** as the data source
+	4.	Done ✅
+
+<img src="Grafana.png" width="500">
+
+
 
 ## 🛡️ WireGuard VPN Setup (via PiVPN)
 
@@ -186,8 +209,8 @@ pivpn -qr             # Export client QR code
 pivpn -c              # View VPN status
 pivpn -bk             # Backup PiVPN
 pivpn -d              # Debug
-
-
+```
+```bash
 sudo systemctl start wg-quick@wg0
 sudo systemctl enable wg-quick@wg0
 ```
