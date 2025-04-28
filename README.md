@@ -1,6 +1,9 @@
 # RaspberryPi-HomeServer
 Raspberry Pi Home Server Deployment, Preparation, Install and Secure Docker, WireGuard PiVPN Setup, Deploy Dockerized Services - Pi-hole DNS, Prometheus + Grafana Dashboard Monitoring RPI, Home Assistant, NGINX Reverse Proxy with SSL, Firewall Configuration (UFW), Router Port Forwarding
 
+## 📈 Project Overview
+This project turns a Raspberry Pi into a secure, resilient home server for self-hosted applications. All services are Dockerized, secured behind VPN and NGINX Reverse Proxy, with hardened network rules and minimal public exposure.
+
 ## 📡 System Architecture 
 <img src="ArchitectureDiagram.png" width="500"> <img src="OverallArchitecture.png" width="250">
 
@@ -41,11 +44,50 @@ BUG_REPORT_URL="http://www.raspbian.org/RaspbianBugs"
 
 uname -a
 Linux raspberrypi 6.12.22-v8+ #1872 SMP PREEMPT Tue Apr 15 15:46:58 BST 2025 aarch64 GNU/Linux
+
+sudo apt update && sudo apt upgrade -y
+sudo reboot
 ```
 
  - ✅ OS Details
  - ✅ Static IP address configured in Router (DHCP reservation)
  - ✅ SSH hardened: PasswordAuthentication: No. PublicKeyAuthentication: Yes. Only key-based SSH access
+
+## 🐳 Install and Secure Docker
+
+```bash
+curl -sSL https://get.docker.com | sh
+sudo usermod -aG docker $USER
+sudo apt install docker-compose-plugin -y
+```
+Enable and start Docker service:
+```bash
+sudo systemctl enable docker
+sudo systemctl start docker
+```
+
+## 📦 Deploy Core Dockerized Services
+
+Portainer (Docker Management)
+```yaml
+# ~/DockerApps/portainer/docker-compose.yml
+version: '3'
+
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+      - "9443:9443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+
+volumes:
+  portainer_data:
+```
 
 ## 🛡️ WireGuard VPN Setup (via PiVPN)
 
@@ -68,4 +110,6 @@ pivpn -d              # Debug
 sudo systemctl start wg-quick@wg0
 sudo systemctl enable wg-quick@wg0
 ```
-Router Port Forwarding: Forward 51820/UDP to your Raspberry Pi internal IP.
+**Router Port Forwarding**: Forward 51820/UDP to your Raspberry Pi internal IP.
+
+
