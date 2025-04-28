@@ -327,8 +327,106 @@ pivpn -d              # Debug
 sudo systemctl start wg-quick@wg0
 sudo systemctl enable wg-quick@wg0
 ```
-**Router Port Forwarding**: Forward 51820/UDP to your Raspberry Pi internal IP.
+**Router Port Forwarding**: 
+Forward 51820/UDP to your Raspberry Pi internal IP.
+
+**🔥 Firewall (UFW) Setup**
+```bash
+sudo nano secure-ufw-reset.sh
+```
+```bash
+#!/bin/bash
+
+echo "Resetting UFW rules..."
+sudo ufw --force reset
+
+echo "Setting default policies: deny all incoming, allow all outgoing..."
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw default allow routed  # Needed for VPN forwarding
+
+echo "Allowing WireGuard VPN (51820/udp)..."
+sudo ufw allow 51820/udp
+
+echo "Allowing Prometheus stack (9586, 9090, 9100, 3000) from LAN and VPN only..."
+for port in 9586 9090 9100 3000; do
+  for subnet in 192.168.1.0/24 10.16.176.0/24; do
+    sudo ufw allow from $subnet to any port $port proto tcp
+  done
+done
+
+echo "Allowing HTTPS (443) for future use (external)..."
+sudo ufw allow 443/tcp
+
+echo "Allowing RPi Connect (44353, 5367, 6780) from LAN and VPN only..."
+for port in 44353 5367 6780; do
+  for subnet in 192.168.1.0/24 10.16.176.0/24; do
+    sudo ufw allow from $subnet to any port $port proto tcp
+  done
+done
+
+echo "Allowing SSH and VNC from LAN and VPN only..."
+for subnet in 192.168.1.0/24 10.16.176.0/24; do
+  sudo ufw allow from $subnet to any port 22 proto tcp
+  sudo ufw allow from $subnet to any port 5900 proto tcp
+done
+
+echo "Allowing web UIs (80, 81, 8080, 8085, 8123) from LAN and VPN only..."
+for port in 80 81 8080 8085 8123; do
+  for subnet in 192.168.1.0/24 10.16.176.0/24; do
+    sudo ufw allow from $subnet to any port $port proto tcp
+  done
+done
+
+echo "Allowing Portainer (9443) from LAN and VPN..."
+for subnet in 192.168.1.0/24 10.16.176.0/24; do
+  sudo ufw allow from $subnet to any port 9443 proto tcp
+done
+
+echo "Allowing DNS (53 tcp/udp) from LAN and VPN..."
+for proto in tcp udp; do
+  for subnet in 192.168.1.0/24 10.16.176.0/24; do
+    sudo ufw allow from $subnet to any port 53 proto $proto
+  done
+done
+
+echo "Allowing DHCP (67/udp) from LAN only..."
+sudo ufw allow from 192.168.1.0/24 to any port 67 proto udp
+
+echo "Disabling IPv6 in UFW config..."
+sudo sed -i 's/^IPV6=yes/IPV6=no/' /etc/default/ufw
+
+echo "Turning on logging..."
+sudo ufw logging on
+
+echo "Enabling UFW..."
+sudo ufw --force enable
+
+echo "Restarting UFW to apply all changes..."
+sudo ufw disable && sudo ufw --force enable
+
+echo "UFW is now active and securely configured!"
+```
+Steps to execute:
+```bash
+chmod +x secure-ufw-reset.sh
+./secure-ufw-reset.sh
+```
+
+- ✅ UFW Status: active
+- ✅ Ports allowed correctly for LAN/VPN only
+- ✅ IPv6 disabled
+- ✅ Logging enabled
+
+Then verify:
+```bash
+sudo ufw status numbered
+```
 
 
+**📜 FINAL 🚀:**
 
-
+- ✅ Only WireGuard (VPN, UDP 51820) and NGINX HTTPS (TCP 443) are exposed to Internet
+- ✅ Every other service is LAN/VPN-only
+- ✅ Reverse proxy SSL termination happens at NGINX Docker container
+- ✅ All sensitive dashboards (Grafana, Pi-hole, Portainer, Home Assistant, etc.) are LAN+VPN only
