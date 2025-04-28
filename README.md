@@ -292,6 +292,7 @@ services:
 ```bash
 docker compose up -d
 ```
+<img src="HomeAssistant.png" width="700">
 
 ## 🛡️ WireGuard VPN Setup (via PiVPN)
 
