@@ -269,6 +269,30 @@ docker-compose up -d
 <img src="npm.png" width="700">
 <img src="npn-cert.png" width="700">
 
+Setup **HomeAssistant** Container  docker-compose.yml for deploying Home Assistant 
+
+Create the config directory.  From within ~/DockerApps/homeassistant, start the container: 
+```bash
+mkdir -p ~/DockerApps/homeassistant/config
+cd ~/DockerApps/homeassistant
+``` 
+```bash
+services:
+  homeassistant:
+    container_name: homeassistant
+    image: "ghcr.io/home-assistant/home-assistant:stable"
+    volumes:
+      - ./config:/config  # Store Home Assistant config data in ./config relative to compose file
+      - /etc/localtime:/etc/localtime:ro
+      - /run/dbus:/run/dbus:ro
+    restart: unless-stopped
+    privileged: true
+    network_mode: host
+```
+```bash
+docker compose up -d
+```
+
 ## 🛡️ WireGuard VPN Setup (via PiVPN)
 
 ```bash
