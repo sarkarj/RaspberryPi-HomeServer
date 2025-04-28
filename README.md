@@ -428,11 +428,20 @@ Then verify:
 sudo ufw status numbered
 ```
 
-**🎯
-
+**🎯 Check Active Services and Open Ports**
+```bash
+systemctl list-units --type=service --state=running | grep ".service"
+```
+```bash
+sudo nmap -sS -p- -T4 localhost
+```
+Run this to find out which container is using which port :
+```bash
+sudo docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Ports}}"
+```
 **📜 FINAL 🚀:**
 
-- ✅ Only WireGuard (VPN, UDP 51820) and NGINX HTTPS (TCP 443) are exposed to Internet
-- ✅ Every other service is LAN/VPN-only
-- ✅ Reverse proxy SSL termination happens at NGINX Docker container
-- ✅ All sensitive dashboards (Grafana, Pi-hole, Portainer, Home Assistant, etc.) are LAN+VPN only
+- ✅ Only WireGuard (VPN, UDP 51820) and NGINX HTTPS (TCP 443) are exposed to Internet 🌐
+- ✅ Every other service is LAN/VPN-only 🔒
+- ✅ Reverse proxy SSL termination happens at NGINX Docker container 🔒
+- ✅ All sensitive dashboards 📈 (Grafana, Pi-hole, Portainer, Home Assistant, etc.) are LAN+VPN only
