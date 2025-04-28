@@ -195,6 +195,54 @@ How to Import:
    3.  Click **Load**, select **Prometheus** as the data source
    4.  Done ✅
 
+Secure Setup **SSL & NGINX Proxy** 
+
+   1. Choose a Dynamic DNS provider   domain (Example: duckdns.org) and generate token
+   2. Running DuckDNS outside of Docker
+      
+```bash
+cat duck.sh
+#!/bin/bash
+echo url="https://www.duckdns.org/update?domains=<subdomin1,subdomin2&token=<token>&ip=<router-public-IP>" | curl -k -o ~/duckdns/duck.log -K -
+```
+Make it executable:
+```bash
+chmod 700 duck.sh
+```
+Test it manually -  Should see OK.
+```bash
+./duck.sh
+cat duck.log
+```
+Add to crontab
+```bash
+crontab -e
+```
+Add this line at the bottom: Save and exit (CTRL+O, Enter, then CTRL+X if using nano).
+```bash
+*/5 * * * * ~/duckdns/duck.sh >/dev/null 2>&1
+```
+Ensure cron is running
+```bash
+sudo systemctl enable cron
+sudo systemctl start cron  Synchronizing state of cron.service with SysV service script with /lib/systemd/systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable cron
+```
+✅ No container overhead
+✅ Easier to debug
+✅ Survives reboots and updates
+✅ Simple to maintain and edit
+
+Every 5 minutes, cron will:
+	•	Run ~/duckdns/duck.sh
+	•	Send a request to DuckDNS to update your public IP
+	•	Log the result (OK/KO) in ~/duckdns/duck.log
+
+You can check the log anytime:
+```bash
+cat ~/duckdns/duck.log
+```
+
 ## 🛡️ WireGuard VPN Setup (via PiVPN)
 
 ```bash
