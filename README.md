@@ -38,4 +38,34 @@ ID_LIKE=debian
 HOME_URL="http://www.raspbian.org/"
 SUPPORT_URL="http://www.raspbian.org/RaspbianForums"
 BUG_REPORT_URL="http://www.raspbian.org/RaspbianBugs"
+
+uname -a
+Linux raspberrypi 6.12.22-v8+ #1872 SMP PREEMPT Tue Apr 15 15:46:58 BST 2025 aarch64 GNU/Linux
 ```
+
+ - ✅ OS Details
+ - ✅ Static IP address configured in Router (DHCP reservation)
+ - ✅ SSH hardened: PasswordAuthentication: No. PublicKeyAuthentication: Yes. Only key-based SSH access
+
+## 🛡️ WireGuard VPN Setup (via PiVPN)
+
+```bash
+curl -L https://install.pivpn.io | bash
+```
+During setup: Select WireGuard, choose default ports (51820/UDP)
+
+ 🔍 After Install Useful Commands:
+
+```bash
+pivpn add             # Add clients
+pivpn list            # View connected clients
+pivpn -qr             # Export client QR code
+pivpn -c              # View VPN status
+pivpn -bk             # Backup PiVPN
+pivpn -d              # Debug
+
+
+sudo systemctl start wg-quick@wg0
+sudo systemctl enable wg-quick@wg0
+```
+Router Port Forwarding: Forward 51820/UDP to your Raspberry Pi internal IP.
